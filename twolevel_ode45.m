@@ -166,8 +166,8 @@ SamplingIndex=1:SamplingRate:length(t);
 tSample=t(SamplingIndex);
 dSample=dipole(SamplingIndex);
 DT=dt*SamplingRate;
-cwtdipole=mywavelet(DT,dSample,freqL,freqU,512);
-
+Flag=input('Freqs or Scales is linear spaced, 0 is Freqs, 1 is Scales: ');
+cwtdipole=mywavelet(DT,dSample,freqL,freqU,512,Flag);
 
 figure;
 subplot(2,1,1);
