@@ -157,36 +157,30 @@ xlabel('Harmonic Order(\omega/\omega_L)','fontsize',14);
 ylabel('Harmonic Intensity(arb.units)','fontsize',14);
 
 %wavelet transform using matlab
-%考虑尺度如何采样的问题，尺度平均的话，频率就不平均，反之亦然
-fc=centfrq('cmor1-2');   %Hz
 freqL=input('Input the Lower limit of freqrange (unit in order): ');
 freqU=input('Input the Upper limit of freqrange (unit in order): ');
 freqL=freqL*omega_L/(2.0*pi*2.418884326505E-17);  %a.u. to Hz
 freqU=freqU*omega_L/(2.0*pi*2.418884326505E-17);  %a.u. to Hz
-freqrange=[freqL, freqU];
-DT=dt*2.418884326505E-17;
-scalerange=fc./(freqrange.*DT)';
-numScales=256; 
-scales=linspace(scalerange(1),scalerange(end),numScales);
-%scales=linspace(scalerange(end),scalerange(1),scalesNum);
-Coeffs=cwt(dipole,scales,'cmor1-2');
-% figure;
-% SCImg = wscalogram('image',abs(Coeffs),'scales',scales,'ydata',dipole,'xdata',t);
+SamplingRate=power(2,3);
+SamplingIndex=1:SamplingRate:length(t);
+tSample=t(SamplingIndex);
+dSample=dipole(SamplingIndex);
+DT=dt*SamplingRate;
+cwtdipole=mywavelet(DT,dSample,freqL,freqU,512);
 
-freqs=scal2frq(scales,'cmor1-2',DT)*(2*pi)*2.418884326505E-17/omega_L;
-% freqs=freqs*(2.0*pi)*2.418884326505E-17/omega_L;
-[Freqs,Tcenter]=meshgrid(freqs,t);
-% [Scales,Tcenter]=meshgrid(scales,tSample);
-%%%%%
-harmonic_energy=sqrt((2.0*xi*rabbi-omega_0).^2+4.0*rabbi.^2)/omega_L;
-% harmonic_energy=harmonic_energy(index);
+
 figure;
 subplot(2,1,1);
-plot(t,harmonic_energy);
+harmonic_energy=sqrt((2.0*xi*rabbi-omega_0).^2+4.0*rabbi.^2)/omega_L;
+plot(harmonic_energy(SamplingIndex),t(SamplingIndex));
 subplot(2,1,2);
-surf(Tcenter,Freqs,abs(Coeffs)');shading('interp');view(0,90);
-% surf(Tcenter,Scales,abs(Coeffs)');shading('interp');view(0,90);
-
-
+mapsize=256;
+colormap(pink(mapsize));
+[Tcenter,Freqs]=meshgrid(cwtdipole.frequency,tSample);
+% % surf(Tcenter,Freqs,wcodemat(cwtdipole.cfs,mapsize)');shading('interp');view(0,90);
+% % image(t,freqs,wcodemat(abs(Coeffs),mapsize));
+imagesc(cwtdipole.frequency.*(2*pi*2.41888E-17)/omega_L,tSample,...
+    wcodemat(cwtdipole.cfs',mapsize));
+% colorbar;
 
     
