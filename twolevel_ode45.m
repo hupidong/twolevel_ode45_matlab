@@ -165,9 +165,11 @@ SamplingRate=power(2,3);
 SamplingIndex=1:SamplingRate:length(t);
 tSample=t(SamplingIndex);
 dSample=dipole(SamplingIndex);
-DT=dt*SamplingRate;
+DT=dt*SamplingRate*2.418884326505E-17;
 Flag=input('Freqs or Scales is linear spaced, 0 is Freqs, 1 is Scales: ');
-cwtdipole=mywavelet(DT,dSample,freqL,freqU,512,Flag);
+wname='cmor1-1';
+numScales=512;
+cwtdipole=mywavelet(DT,dSample,freqL,freqU,numScales,wname,Flag);
 
 figure;
 subplot(2,1,1);
@@ -179,7 +181,7 @@ colormap(pink(mapsize));
 [Tcenter,Freqs]=meshgrid(cwtdipole.frequency,tSample);
 % % surf(Tcenter,Freqs,wcodemat(cwtdipole.cfs,mapsize)');shading('interp');view(0,90);
 % % image(t,freqs,wcodemat(abs(Coeffs),mapsize));
-imagesc(cwtdipole.frequency.*(2*pi*2.41888E-17)/omega_L,tSample,...
+imagesc(cwtdipole.frequency.*(2*pi*2.418884326505E-17)/omega_L,tSample,...
     wcodemat(cwtdipole.cfs',mapsize));
 % colorbar;
 
