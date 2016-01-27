@@ -12,6 +12,8 @@ if(Flag==0) %freqs linear spaced
     scales=fc./(freqs.*DT);
 else
 if(Flag==1) %scales linear spaced
+    scaleLower=fc/(freqU*DT);
+    scaleUpper=fc/(freqL*DT);
    scales=linspace(scaleLower,scaleUpper,numScales);
    freqs=scal2frq(scales,my_wavelet_fun,DT);
 else
