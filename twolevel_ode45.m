@@ -219,27 +219,48 @@ set(hAx(2),'linewidth',1);
 set(hAx(2),'fontsize',16);
 
 %%%%%
+% figure;
+% subplot(1,2,1);
+% harmonic_energy=sqrt((2.0*xi*rabbi-omega_0).^2+4.0*rabbi.^2)/omega_L;
+% plot(harmonic_energy(SamplingIndex),t(SamplingIndex)/T);
+% set(gca,'Ydir','reverse');
+% set(gca,'linewidth',1);
+% set(gca,'fontsize',16);
+% xlabel('Harmonic Order(\omega_{\itL})','FontName','Times New Roman','fontsize',24);
+% ylabel('Time ({\itT})','FontName','Times New Roman','fontsize',24);
+% subplot(1,2,2);
+% mapsize=256;
+% colormap(pink(mapsize));
+% [Tcenter,Freqs]=meshgrid(cwtdipole.frequency.*(2*pi*2.418884326505E-17)...
+%     /omega_L,tSample/T);
+% surf(Tcenter,Freqs,wcodemat(cwtdipole.cfs,mapsize)');shading('interp');view(0,90);
+% set(gca,'Ydir','reverse');
+% set(gca,'linewidth',1);
+% set(gca,'fontsize',16);
+% % % image(t,freqs,wcodemat(abs(Coeffs),mapsize));
+% % imagesc(cwtdipole.frequency.*(2*pi*2.418884326505E-17)/omega_L,tSample/T,...
+% %     wcodemat(cwtdipole.cfs',mapsize));
 figure;
-subplot(1,2,1);
-harmonic_energy=sqrt((2.0*xi*rabbi-omega_0).^2+4.0*rabbi.^2)/omega_L;
-plot(harmonic_energy(SamplingIndex),t(SamplingIndex)/T);
-set(gca,'Ydir','reverse');
-set(gca,'linewidth',1);
-set(gca,'fontsize',16);
-xlabel('Harmonic Order(\omega_{\itL})','FontName','Times New Roman','fontsize',24);
-ylabel('Time ({\itT})','FontName','Times New Roman','fontsize',24);
-subplot(1,2,2);
+subplot(2,1,1);
 mapsize=256;
 colormap(pink(mapsize));
-[Tcenter,Freqs]=meshgrid(cwtdipole.frequency.*(2*pi*2.418884326505E-17)...
-    /omega_L,tSample/T);
-surf(Tcenter,Freqs,wcodemat(cwtdipole.cfs,mapsize)');shading('interp');view(0,90);
-set(gca,'Ydir','reverse');
+[Tcenter,Freqs]=meshgrid(tSample/T,cwtdipole.frequency.*(2*pi*2.418884326505E-17)...
+    /omega_L);
+mesh(Tcenter,Freqs,wcodemat(cwtdipole.cfs,mapsize));shading('interp');view(0,90);
 set(gca,'linewidth',1);
-set(gca,'fontsize',16);
-% % image(t,freqs,wcodemat(abs(Coeffs),mapsize));
-% imagesc(cwtdipole.frequency.*(2*pi*2.418884326505E-17)/omega_L,tSample/T,...
-%     wcodemat(cwtdipole.cfs',mapsize));
+set(gca,'FontName','Arial','FontSize',20);
+ylabel('Harmonic Order(\omega_{\itL})','FontName','Times New Roman','fontsize',40);
+subplot(2,1,2);
+harmonic_energy=sqrt((2.0*xi*rabbi-omega_0).^2+4.0*rabbi.^2)/omega_L;
+[hAx,hLine1,hLin2]=plotyy(t/T,harmonic_energy,t/T,[laser_field,...
+    abs(laser_field)]);
+xlabel('Time (\it{T})','FontName','Times New Roman','FontSize',40);
+ylabel(hAx(1),'Harmonic Order(\omega_{\itL})','FontName','Times New Roman','fontsize',40);
+ylabel(hAx(2),'{\it{E}}({\it{t}})&|{\it{E}}({\it{t}})| (a.u.)','FontName','Times New Roman','fontsize',40);
+set(hAx(1),'linewidth',1);
+set(hAx(1),'FontName','Arial','FontSize',20);
+set(hAx(2),'linewidth',1);
+set(hAx(2),'FontName','Arial','FontSize',20);
 
 %%synthesize attosecond pulse train
 min_order=input('选择谐波最小级次：');   %合成脉冲选择谐波级次范围，根据实际情况确定
